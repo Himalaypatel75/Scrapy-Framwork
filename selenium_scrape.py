@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 import time
 import os
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
 
@@ -45,8 +46,30 @@ try:
     next_button_password.click()
 
     # Optional: wait for the final page to render
-    time.sleep(100)  # Adjust time as necessary
+    time.sleep(20)  # Adjust time as necessary
 
+    list_display = driver.find_element(By.XPATH, "/html/body/app-root/app-layout/mat-sidenav-container/mat-sidenav-content/div/div[2]/app-dashboard-home/div/div[1]/mat-card/app-my-activities-widget/div/div[2]/div[2]/div/div/div/h4")
+    list_display.click()
+
+    time.sleep(10) 
+
+    # Capture the HTML content before interacting with the page
+    html_content_content = driver.page_source
+
+    # # Save the HTML content into a file before rendering
+    # with open("page_render_content.html", "w", encoding="utf-8") as file:
+    #     file.write(html_content_content)
+
+    soup = BeautifulSoup(html_content_content, "lxml")
+
+    elements = soup.select(".stop-div div:nth-child(1) .text-bold")
+
+    # Loop through each element found and print its text content
+    for element in elements:
+        print(element.text)
+
+    print("click completed")
+    time.sleep(200)
 finally:
     # Close the browser after completion
     driver.quit()
